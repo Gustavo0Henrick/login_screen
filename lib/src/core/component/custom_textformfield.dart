@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class CustomTextFormField extends StatefulWidget {
   TextEditingController controller;
   Function validator;

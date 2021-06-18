@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:login_screen/src/constants/routes.dart';
+import 'package:login_screen/src/core/constants/routes.dart';
 import 'dart:convert';
 
 class SignUp {

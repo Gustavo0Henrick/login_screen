@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:login_screen/src/component/custom_textformfield.dart';
-import 'package:login_screen/src/component/gradient_button.dart';
-import 'package:login_screen/src/component/password_field.dart';
-import 'package:login_screen/src/constants/colors.dart';
-import 'package:login_screen/src/constants/images.dart';
-import 'package:login_screen/src/pages/sign_up_page.dart';
+import 'package:login_screen/src/core/component/custom_textformfield.dart';
+import 'package:login_screen/src/core/component/gradient_button.dart';
+import 'package:login_screen/src/core/component/password_field.dart';
+import 'package:login_screen/src/core/constants/colors.dart';
+import 'package:login_screen/src/core/constants/images.dart';
+import 'package:login_screen/src/core/constants/preferences_key.dart';
+import 'package:login_screen/src/core/models/login_model.dart';
+import 'package:login_screen/src/pages/register/register_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -19,8 +23,8 @@ class _LoginPageState extends State<LoginPage> {
 
   bool remember = false;
   bool isPassword = true;
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -45,14 +49,6 @@ class _LoginPageState extends State<LoginPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            // Text(
-                            //   "Login",
-                            //   style: TextStyle(
-                            //     color: Colors.black,
-                            //     fontSize: 38,
-                            //     fontWeight: FontWeight.w600,
-                            //   ),
-                            // ),
                             Container(
                               height: 120,
                               width: 120,
@@ -73,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.only(top: 15),
                       child: CustomTextFormField(
                         // validator: () {},
-                        controller: email,
+                        controller: _email,
                       ),
                     ),
                     Padding(
@@ -87,14 +83,16 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     PasswordField(
-                      controller: password,
+                      controller: _password,
                       password: isPassword,
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: GradientButton(
                         borderRadius: 5,
-                        onPressed: () {},
+                        onPressed: () {
+                          _doLogin();
+                        },
                         child: Text(
                           "Entrar",
                           style: TextStyle(
@@ -150,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 130),
+                    SizedBox(height: 120),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Container(
@@ -192,5 +190,27 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void _doLogin() async {
+    String emailForm = this._email.text;
+    String passwordForm = this._password.text;
+
+    LoginModel savedUser = await _getSavedUser();
+    if (emailForm == savedUser.email && passwordForm == savedUser.password) {
+      print("LOGIN SUCESS");
+    } else {
+      print("LOGIN FAIL");
+    }
+  }
+
+  Future<LoginModel> _getSavedUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String jsonUser = prefs.getString(PreferencesKeys.activeUser);
+    // print(jsonUser);
+
+    Map<String, dynamic> mapUser = json.decode(jsonUser);
+    LoginModel user = LoginModel.fromJson(mapUser);
+    return user;
   }
 }

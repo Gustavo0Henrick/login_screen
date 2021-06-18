@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:login_screen/src/component/custom_textformfield.dart';
-import 'package:login_screen/src/component/gradient_button.dart';
-import 'package:login_screen/src/constants/colors.dart';
-import 'package:login_screen/src/constants/images.dart';
-import 'package:login_screen/src/pages/login_page.dart';
-import 'package:login_screen/src/component/password_field.dart';
+import 'package:login_screen/src/core/component/custom_textformfield.dart';
+import 'package:login_screen/src/core/component/gradient_button.dart';
+import 'package:login_screen/src/core/constants/colors.dart';
+import 'package:login_screen/src/core/constants/images.dart';
+import 'package:login_screen/src/core/constants/preferences_key.dart';
+import 'package:login_screen/src/core/models/login_model.dart';
+import 'package:login_screen/src/pages/login/login_page.dart';
+import 'package:login_screen/src/core/component/password_field.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -14,13 +18,16 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  Color gradientColor1 = Colors.orange[400];
+  Color gradientColor2 = Colors.orange[900];
+
   bool valueCheck = false;
   bool isPassword = true;
-  TextEditingController name = TextEditingController();
-  TextEditingController lastName = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController password = TextEditingController();
-  TextEditingController confirmedPassword = TextEditingController();
+  TextEditingController _name = TextEditingController();
+  TextEditingController _lastName = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  TextEditingController _confirmedPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 15, bottom: 15),
                     child: CustomTextFormField(
-                      controller: name,
+                      controller: _name,
                     ),
                   ),
                   Text(
@@ -74,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 15, bottom: 15),
                     child: CustomTextFormField(
-                      controller: lastName,
+                      controller: _lastName,
                     ),
                   ),
                   Text(
@@ -87,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 15),
                     child: CustomTextFormField(
-                      controller: email,
+                      controller: _email,
                     ),
                   ),
                   Padding(
@@ -101,7 +108,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   PasswordField(
-                    controller: password,
+                    controller: _password,
                     password: isPassword,
                   ),
                   Padding(
@@ -115,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   PasswordField(
-                    controller: confirmedPassword,
+                    controller: _confirmedPassword,
                     password: isPassword,
                   ),
                   Padding(
@@ -141,10 +148,12 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 30),
+                    padding: EdgeInsets.only(top: 30, bottom: 60),
                     child: GradientButton(
                       borderRadius: 5,
-                      onPressed: () {},
+                      onPressed: () {
+                        _signUp();
+                      },
                       child: Text(
                         "Cadastrar",
                         style: TextStyle(
@@ -157,14 +166,14 @@ class _RegisterPageState extends State<RegisterPage> {
                       width: MediaQuery.of(context).size.width * 0.8,
                       gradient: LinearGradient(
                         colors: [
-                          Colors.orange[200],
-                          Colors.orange[700],
+                          gradientColor1,
+                          gradientColor2,
                         ],
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 50),
+                    padding: EdgeInsets.only(top: 5),
                     child: Container(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Row(
@@ -201,6 +210,27 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
       ),
+    );
+  }
+
+  void _signUp() {
+    LoginModel newUser = LoginModel(
+      name: _name.text,
+      lastName: _lastName.text,
+      email: _email.text,
+      password: _password.text,
+      keepOn: true,
+    );
+
+    print(newUser);
+    _saveUser(newUser);
+  }
+
+  void _saveUser(LoginModel user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(
+      PreferencesKeys.activeUser,
+      json.encode(user.toJson()),
     );
   }
 }
