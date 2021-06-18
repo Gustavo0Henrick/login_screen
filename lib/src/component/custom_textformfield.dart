@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormField extends StatefulWidget {
   TextEditingController controller;
+  Function validator;
 
   CustomTextFormField({
     Key key,
     this.controller,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -25,6 +27,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       child: Padding(
         padding: EdgeInsets.all(8),
         child: TextFormField(
+          validator: widget.validator,
           controller: widget.controller,
           cursorHeight: 25,
           decoration: InputDecoration(

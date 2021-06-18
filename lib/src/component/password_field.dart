@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class PasswordField extends StatefulWidget {
   bool password;
   TextEditingController controller;
+  Function validator;
   PasswordField({
     Key key,
     this.password,
     this.controller,
+    this.validator,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class _PasswordFieldState extends State<PasswordField> {
       child: Padding(
         padding: EdgeInsets.all(8),
         child: TextFormField(
+          validator: widget.validator,
           controller: widget.controller,
           obscureText: widget.password,
           cursorHeight: 25,

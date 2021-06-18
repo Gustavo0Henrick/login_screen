@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:login_screen/src/component/custom_textformfield.dart';
 import 'package:login_screen/src/component/gradient_button.dart';
 import 'package:login_screen/src/component/password_field.dart';
-import 'package:login_screen/src/pages/registerpage.dart';
+import 'package:login_screen/src/constants/colors.dart';
+import 'package:login_screen/src/constants/images.dart';
+import 'package:login_screen/src/pages/sign_up_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -12,6 +14,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Color gradientColor1 = Colors.orange[400];
+  Color gradientColor2 = Colors.orange[900];
+
+  bool remember = false;
   bool isPassword = true;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -32,7 +38,30 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 200),
+                    Padding(
+                      padding: EdgeInsets.only(top: 50, bottom: 30),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Text(
+                            //   "Login",
+                            //   style: TextStyle(
+                            //     color: Colors.black,
+                            //     fontSize: 38,
+                            //     fontWeight: FontWeight.w600,
+                            //   ),
+                            // ),
+                            Container(
+                              height: 120,
+                              width: 120,
+                              child: Image.asset(CustomImages.arvore),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                     Text(
                       "Email",
                       style: TextStyle(
@@ -43,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: CustomTextFormField(
-                        
+                        // validator: () {},
                         controller: email,
                       ),
                     ),
@@ -69,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           "Entrar",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: CustomColors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                           ),
@@ -78,8 +107,8 @@ class _LoginPageState extends State<LoginPage> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         gradient: LinearGradient(
                           colors: [
-                            Colors.orange[200],
-                            Colors.orange[700],
+                            gradientColor1,
+                            gradientColor2,
                           ],
                         ),
                       ),
@@ -89,21 +118,39 @@ class _LoginPageState extends State<LoginPage> {
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            InkWell(
-                              enableFeedback: true,
-                              onTap: () {},
-                              child: Text(
-                                "Esqueceu a senha?",
-                                style: TextStyle(fontWeight: FontWeight.w600),
+                            Row(
+                              children: [
+                                Checkbox(
+                                    value: remember,
+                                    onChanged: (bool newValue) {
+                                      setState(() {
+                                        remember = newValue;
+                                      });
+                                    }),
+                                Text(
+                                  "Lembrar usuário",
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 20),
+                              child: InkWell(
+                                enableFeedback: true,
+                                onTap: () {},
+                                child: Text(
+                                  "Esqueceu a senha?",
+                                  style: TextStyle(fontWeight: FontWeight.w600),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
                     ),
-                    SizedBox(height: 150),
+                    SizedBox(height: 130),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Container(
@@ -111,7 +158,8 @@ class _LoginPageState extends State<LoginPage> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("Não tem uma conta?"),
+                            Text("Não tem uma conta?",
+                                style: TextStyle(fontWeight: FontWeight.w600)),
                             Padding(
                               padding: EdgeInsets.only(left: 5),
                               child: InkWell(
@@ -127,7 +175,7 @@ class _LoginPageState extends State<LoginPage> {
                                   "Cadastre-se",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.orange),
+                                      color: CustomColors.mainColor),
                                 ),
                               ),
                             ),

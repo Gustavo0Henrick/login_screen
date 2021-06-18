@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:login_screen/src/pages/loginpage.dart';
+import 'package:login_screen/src/pages/login_page.dart';
 
 class MyApp extends StatelessWidget {
   @override
