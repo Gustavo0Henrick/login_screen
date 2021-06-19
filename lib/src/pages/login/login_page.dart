@@ -6,6 +6,7 @@ import 'package:login_screen/src/core/constants/colors.dart';
 import 'package:login_screen/src/core/constants/images.dart';
 import 'package:login_screen/src/core/constants/preferences_key.dart';
 import 'package:login_screen/src/core/models/login_model.dart';
+import 'package:login_screen/src/pages/login/login_service.dart';
 import 'package:login_screen/src/pages/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -18,6 +19,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  double _emailHeight = 40;
+  double _passwordHeight = 40;
   Color gradientColor1 = Colors.orange[400];
   Color gradientColor2 = Colors.orange[900];
 
@@ -68,7 +71,15 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: CustomTextFormField(
-                        // validator: () {},
+                        height: _emailHeight,
+                        validator: (value) {
+                          if (value.length < 5) {
+                            return "Insira um Email Valido";
+                          } else if (!value.contains("@")) {
+                            return "Email Invalido";
+                          }
+                          return null;
+                        },
                         controller: _email,
                       ),
                     ),
@@ -83,6 +94,13 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     PasswordField(
+                      height: _passwordHeight,
+                      validator: (value) {
+                        if (value.length < 6) {
+                          return "Senha Invalida";
+                        }
+                        return null;
+                      },
                       controller: _password,
                       password: isPassword,
                     ),
@@ -91,6 +109,16 @@ class _LoginPageState extends State<LoginPage> {
                       child: GradientButton(
                         borderRadius: 5,
                         onPressed: () {
+                          setState(() {
+                            if (_formKey.currentState.validate()) {
+                              _emailHeight = 40;
+                              _passwordHeight = 40;
+                            } else {
+                              _emailHeight = 60;
+                              _passwordHeight = 60;
+                            }
+                          });
+
                           _doLogin();
                         },
                         child: Text(
@@ -148,7 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 120),
+                    SizedBox(
+                        height: (_emailHeight == 60 && _passwordHeight == 60)
+                            ? 90
+                            : 130),
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Container(
@@ -193,16 +224,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _doLogin() async {
-    String emailForm = this._email.text;
-    String passwordForm = this._password.text;
-
-    LoginModel savedUser = await _getSavedUser();
-    if (emailForm == savedUser.email && passwordForm == savedUser.password) {
-      print("LOGIN SUCESS");
+    if (_formKey.currentState.validate()) {
+      LoginService().login(_email.text, _password.text);
     } else {
-      print("LOGIN FAIL");
+      _email.text = '';
+      _password.text = '';
+      print("Invalido");
     }
   }
+
+  // void _doLogin() async {
+  //   String emailForm = this._email.text;
+  //   String passwordForm = this._password.text;
+
+  //   LoginModel savedUser = await _getSavedUser();
+  //   if (emailForm == savedUser.email && passwordForm == savedUser.password) {
+  //     print("LOGIN SUCESS");
+  //   } else {
+  //     print("LOGIN FAIL");
+  //   }
+  // }
 
   Future<LoginModel> _getSavedUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

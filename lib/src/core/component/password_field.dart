@@ -5,11 +5,13 @@ class PasswordField extends StatefulWidget {
   bool password;
   TextEditingController controller;
   Function validator;
+  double height;
   PasswordField({
     Key key,
     this.password,
     this.controller,
     this.validator,
+    this.height = 40,
   }) : super(key: key);
 
   @override
@@ -24,7 +26,7 @@ class _PasswordFieldState extends State<PasswordField> {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(5),
       ),
-      height: 40,
+      height: widget.height,
       width: MediaQuery.of(context).size.width * 0.8,
       child: Padding(
         padding: EdgeInsets.all(8),
