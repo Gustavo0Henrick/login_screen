@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_screen/src/pages/home/home%20widgets/home_appbar.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
@@ -6,7 +7,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: getHomeAppBar(),
       body: Column(
         children: [
           Center(
