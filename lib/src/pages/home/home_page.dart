@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:login_screen/src/pages/home/home_widgets/home_appbar.dart';
+import 'package:login_screen/src/pages/home/home_widgets/home_body.dart';
 import 'package:login_screen/src/pages/home/home_widgets/home_button.dart';
 import 'package:login_screen/src/pages/home/home_widgets/home_drawer.dart';
 
@@ -12,6 +13,7 @@ class HomePage extends StatelessWidget {
       appBar: getHomeAppBar(),
       drawer: getHomeDrawer(),
       floatingActionButton: getHomeButton(),
+      body: HomeContent(),
     );
   }
 }

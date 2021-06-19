@@ -8,7 +8,7 @@ Drawer getHomeDrawer() {
       children: [
         UserAccountsDrawerHeader(
           decoration: BoxDecoration(
-            color: CustomColors.deepOrange,
+            color: CustomColors.darkOrange,
           ),
           accountEmail: Text(
             "teste@teste",
@@ -33,14 +33,14 @@ Drawer getHomeDrawer() {
           title: Text("Configurações"),
           leading: Icon(
             Icons.settings,
-            color: CustomColors.deepOrange,
+            color: CustomColors.darkOrange,
           ),
         ),
         ListTile(
           title: Text("Sair"),
           leading: Icon(
             Icons.logout,
-            color: CustomColors.deepOrange,
+            color: CustomColors.darkOrange,
           ),
         ),
       ],
