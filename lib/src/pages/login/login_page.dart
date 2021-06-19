@@ -19,13 +19,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  double _emailHeight = 40;
-  double _passwordHeight = 40;
+  double _height = 40;
+
+  bool errorLogin = false;
   Color gradientColor1 = Colors.orange[400];
   Color gradientColor2 = Colors.orange[900];
 
   bool remember = false;
-  bool isPassword = true;
+  bool _isPassword = true;
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -71,11 +72,13 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: CustomTextFormField(
-                        height: _emailHeight,
+                        inputType: TextInputType.emailAddress,
+                        height: _height,
                         validator: (value) {
-                          if (value.length < 5) {
-                            return "Insira um Email Valido";
-                          } else if (!value.contains("@")) {
+                          if (value.length < 5 ||
+                              value == '' ||
+                              !value.contains("@")) {
+                            errorLogin = true;
                             return "Email Invalido";
                           }
                           return null;
@@ -84,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 15, bottom: 15),
+                      padding: EdgeInsets.only(bottom: 15),
                       child: Text(
                         "Senha",
                         style: TextStyle(
@@ -94,32 +97,26 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     PasswordField(
-                      height: _passwordHeight,
+                      inputType: TextInputType.text,
+                      height: _height,
                       validator: (value) {
-                        if (value.length < 6) {
-                          return "Senha Invalida";
+                        if (value.length < 6 || value == '') {
+                          errorLogin = true;
+                          return "senha invalida";
                         }
                         return null;
                       },
                       controller: _password,
-                      password: isPassword,
+                      password: _isPassword,
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 15),
+                      padding: EdgeInsets.only(top: 20),
                       child: GradientButton(
                         borderRadius: 5,
                         onPressed: () {
                           setState(() {
-                            if (_formKey.currentState.validate()) {
-                              _emailHeight = 40;
-                              _passwordHeight = 40;
-                            } else {
-                              _emailHeight = 60;
-                              _passwordHeight = 60;
-                            }
+                            _doLogin();
                           });
-
-                          _doLogin();
                         },
                         child: Text(
                           "Entrar",
@@ -176,12 +173,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                        height: (_emailHeight == 60 && _passwordHeight == 60)
-                            ? 90
-                            : 130),
                     Padding(
-                      padding: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.only(top: 80),
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Row(
@@ -230,20 +223,9 @@ class _LoginPageState extends State<LoginPage> {
       _email.text = '';
       _password.text = '';
       print("Invalido");
+      errorLogin = true;
     }
   }
-
-  // void _doLogin() async {
-  //   String emailForm = this._email.text;
-  //   String passwordForm = this._password.text;
-
-  //   LoginModel savedUser = await _getSavedUser();
-  //   if (emailForm == savedUser.email && passwordForm == savedUser.password) {
-  //     print("LOGIN SUCESS");
-  //   } else {
-  //     print("LOGIN FAIL");
-  //   }
-  // }
 
   Future<LoginModel> _getSavedUser() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

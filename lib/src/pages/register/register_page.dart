@@ -19,11 +19,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  double _nameHeight = 40;
-  double _lastNameHeight = 40;
-  double _emailHeight = 40;
-  double _passwordHeight = 40;
-  double _confirmedHeight = 40;
+  double _height = 40;
 
   Color gradientColor1 = Colors.orange[400];
   Color gradientColor2 = Colors.orange[900];
@@ -78,10 +74,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15, bottom: 15),
                       child: CustomTextFormField(
-                        height: _nameHeight,
+                        inputType: TextInputType.name,
+                        height: _height,
                         validator: (value) {
                           if (value.length < 2) {
-                            return "Insira um Nome valido";
+                            return "Insira um Nome válido";
                           }
                           return null;
                         },
@@ -98,10 +95,11 @@ class _RegisterPageState extends State<RegisterPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15, bottom: 15),
                       child: CustomTextFormField(
-                        height: _lastNameHeight,
+                        inputType: TextInputType.name,
+                        height: _height,
                         validator: (value) {
                           if (value.length < 2) {
-                            return "Insira um Sobrenome valido";
+                            return "Insira um Sobrenome válido";
                           }
                           return null;
                         },
@@ -118,12 +116,13 @@ class _RegisterPageState extends State<RegisterPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: CustomTextFormField(
-                        height: _emailHeight,
+                        inputType: TextInputType.emailAddress,
+                        height: _height,
                         validator: (value) {
                           if (value.length < 5) {
-                            return "Insira um Email Valido";
+                            return "Insira um Email válido";
                           } else if (!value.contains("@")) {
-                            return "Email Invalido";
+                            return "Email Inválido";
                           }
                           return null;
                         },
@@ -141,10 +140,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     PasswordField(
-                      height: _passwordHeight,
+                      inputType: TextInputType.text,
+                      height: _height,
                       validator: (value) {
                         if (value.length < 6) {
-                          return "Senha Invalida";
+                          return "Senha inválida";
                         }
                         return null;
                       },
@@ -162,12 +162,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                     PasswordField(
-                      height: _confirmedHeight,
+                      inputType: TextInputType.text,
+                      height: _height,
                       validator: (value) {
                         if (value != _password.text) {
                           return "Senhas Diferentes";
                         } else if (value == '') {
-                          return "Repita a senha";
+                          return "Insira a senha";
                         }
                         return null;
                       },
@@ -200,24 +201,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       padding: EdgeInsets.only(top: 30, bottom: 60),
                       child: GradientButton(
                         borderRadius: 5,
-                        onPressed: () {
-                          setState(() {
-                            if (_formKey.currentState.validate()) {
-                              _nameHeight = 40;
-                              _lastNameHeight = 40;
-                              _emailHeight = 40;
-                              _passwordHeight = 40;
-                              _confirmedHeight = 40;
-                            } else {
-                              _nameHeight = 60;
-                              _lastNameHeight = 60;
-                              _emailHeight = 60;
-                              _passwordHeight = 60;
-                              _confirmedHeight = 60;
-                            }
-                          });
-                          _doSignUp();
-                        },
+                        onPressed: valueCheck
+                            ? () {
+                                setState(() {
+                                  _doSignUp();
+                                });
+                              }
+                            : null,
                         child: Text(
                           "Cadastrar",
                           style: TextStyle(
@@ -228,12 +218,19 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         height: 40,
                         width: MediaQuery.of(context).size.width * 0.8,
-                        gradient: LinearGradient(
-                          colors: [
-                            gradientColor1,
-                            gradientColor2,
-                          ],
-                        ),
+                        gradient: valueCheck
+                            ? LinearGradient(
+                                colors: [
+                                  gradientColor1,
+                                  gradientColor2,
+                                ],
+                              )
+                            : LinearGradient(
+                                colors: [
+                                  Colors.grey[400],
+                                  Colors.grey[700],
+                                ],
+                              ),
                       ),
                     ),
                     Padding(
@@ -277,19 +274,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-  // void _signUp() {
-  //   LoginModel newUser = LoginModel(
-  //     name: _name.text,
-  //     lastName: _lastName.text,
-  //     email: _email.text,
-  //     password: _password.text,
-  //     keepOn: true,
-  //   );
-
-  //   print(newUser);
-  //   _saveUser(newUser);
-  // }
 
   void _saveUser(LoginModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
