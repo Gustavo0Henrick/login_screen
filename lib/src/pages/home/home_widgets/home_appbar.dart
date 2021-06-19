@@ -6,13 +6,13 @@ AppBar getHomeAppBar() {
     title: Text("Loja"),
     centerTitle: true,
     backgroundColor: CustomColors.deepOrange,
-    leading: IconButton(
-      onPressed: () {},
-      icon: Icon(
-        Icons.menu,
-        color: CustomColors.white,
-      ),
-    ),
+    // leading: IconButton(
+    //   onPressed: () {},
+    //   icon: Icon(
+    //     Icons.menu,
+    //     color: CustomColors.white,
+    //   ),
+    // ),
     actions: [
       IconButton(
         icon: Icon(
