@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class CustomTextFormField extends StatefulWidget {
   TextEditingController controller;
   Function validator;
-  double height;
+  final width;
+  TextInputType inputType;
 
   CustomTextFormField({
     Key key,
     this.controller,
     this.validator,
-    this.height = 40,
+    this.inputType = TextInputType.text,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -21,21 +24,19 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: widget.width,
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(5),
-      ),
-      height: widget.height,
-      width: MediaQuery.of(context).size.width * 0.8,
+          color: Colors.grey[200], borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.only(left: 15, right: 15),
         child: TextFormField(
+          keyboardType: widget.inputType,
           validator: widget.validator,
-          controller: widget.controller,
           cursorHeight: 25,
           decoration: InputDecoration(
             border: InputBorder.none,
           ),
+          controller: widget.controller,
         ),
       ),
     );

@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class PasswordField extends StatefulWidget {
-  bool password;
+  bool obscure;
   TextEditingController controller;
   Function validator;
-  double height;
+  final width;
+  TextInputType inputType;
+
   PasswordField({
     Key key,
-    this.password,
+    this.obscure,
     this.controller,
     this.validator,
-    this.height = 40,
+    this.inputType = TextInputType.text,
+    this.width,
   }) : super(key: key);
 
   @override
@@ -22,33 +25,28 @@ class _PasswordFieldState extends State<PasswordField> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: widget.width,
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(5),
-      ),
-      height: widget.height,
-      width: MediaQuery.of(context).size.width * 0.8,
+          color: Colors.grey[200], borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.only(left: 15, right: 15, bottom: 0),
         child: TextFormField(
+          obscureText: widget.obscure,
           validator: widget.validator,
-          controller: widget.controller,
-          obscureText: widget.password,
           cursorHeight: 25,
           decoration: InputDecoration(
-            suffixIcon: InkWell(
-              onTap: () {
-                setState(() {
-                  widget.password = !widget.password;
-                });
-              },
-              enableFeedback: widget.password,
-              child: Icon(
-                widget.password ? Icons.visibility_off : Icons.visibility,
-              ),
-            ),
+            suffixIcon: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    widget.obscure = !widget.obscure;
+                  });
+                },
+                child: widget.obscure
+                    ? Icon(Icons.visibility_off)
+                    : Icon(Icons.visibility)),
             border: InputBorder.none,
           ),
+          controller: widget.controller,
         ),
       ),
     );
