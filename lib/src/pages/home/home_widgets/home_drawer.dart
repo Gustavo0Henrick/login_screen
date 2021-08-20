@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_screen/src/core/constants/colors.dart';
+import 'package:login_screen/src/core/themes/colors.dart';
 
 Drawer getHomeDrawer() {
   return Drawer(

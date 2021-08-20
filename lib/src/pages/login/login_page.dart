@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:login_screen/src/core/component/custom_textformfield.dart';
 import 'package:login_screen/src/core/component/gradient_button.dart';
 import 'package:login_screen/src/core/component/password_field.dart';
-import 'package:login_screen/src/core/constants/colors.dart';
-import 'package:login_screen/src/core/constants/images.dart';
+import 'package:login_screen/src/core/themes/colors.dart';
+import 'package:login_screen/src/core/themes/images.dart';
 import 'package:login_screen/src/core/constants/preferences_key.dart';
 import 'package:login_screen/src/core/models/login_model.dart';
-import 'package:login_screen/src/pages/login/login_service.dart';
-import 'package:login_screen/src/pages/register/register_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -19,20 +17,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  double _height = 40;
-
   bool errorLogin = false;
   Color gradientColor1 = Colors.orange[400];
   Color gradientColor2 = Colors.orange[900];
 
   bool remember = false;
-  bool _isPassword = true;
+  bool _obscure = true;
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -72,22 +69,17 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: EdgeInsets.only(top: 15),
                       child: CustomTextFormField(
+                        controller: _email,
                         inputType: TextInputType.emailAddress,
-                        height: _height,
                         validator: (value) {
-                          if (value.length < 5 ||
-                              value == '' ||
-                              !value.contains("@")) {
-                            errorLogin = true;
-                            return "Email Invalido";
-                          }
+                          if (!value.contains("@") || value == '') {}
                           return null;
                         },
-                        controller: _email,
+                        width: size.width * 0.8,
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 15),
+                      padding: EdgeInsets.only(top: 15),
                       child: Text(
                         "Senha",
                         style: TextStyle(
@@ -96,18 +88,17 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    PasswordField(
-                      inputType: TextInputType.text,
-                      height: _height,
-                      validator: (value) {
-                        if (value.length < 6 || value == '') {
-                          errorLogin = true;
-                          return "senha invalida";
-                        }
-                        return null;
-                      },
-                      controller: _password,
-                      password: _isPassword,
+                    Padding(
+                      padding: EdgeInsets.only(top: 15),
+                      child: PasswordField(
+                        controller: _password,
+                        validator: (value) {
+                          if (value == '') {}
+                          return null;
+                        },
+                        obscure: _obscure,
+                        width: size.width * 0.8,
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 20),
@@ -187,11 +178,7 @@ class _LoginPageState extends State<LoginPage> {
                               child: InkWell(
                                 enableFeedback: true,
                                 onTap: () {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (builder) =>
-                                              RegisterPage()));
+                                  Navigator.pushNamed(context, "/register");
                                 },
                                 child: Text(
                                   "Cadastre-se",
@@ -218,7 +205,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _doLogin() async {
     if (_formKey.currentState.validate()) {
-      LoginService().login(_email.text, _password.text);
+      print('login');
     } else {
       _email.text = '';
       _password.text = '';
